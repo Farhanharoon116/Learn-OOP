@@ -175,10 +175,36 @@ a{color:var(--accent2);}a:hover{color:var(--accent);}
 .diff-b{background:rgba(52,211,153,.12);color:var(--green);border:1px solid rgba(52,211,153,.2);}
 .diff-i{background:rgba(251,191,36,.12);color:var(--amber);border:1px solid rgba(251,191,36,.2);}
 .diff-a{background:rgba(248,113,113,.12);color:var(--coral);border:1px solid rgba(248,113,113,.2);}
-/* RUNNING STATE */
-.run-btn.running{background:var(--amber);animation:pulse .8s ease-in-out infinite;}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
-@media(max-width:580px){.stats{gap:1.3rem;}.nav-links{display:none;}.section{padding:2rem 1rem;}.playground-editor{grid-template-columns:1fr;}}
+/* VIDEO CARDS */
+.vid-section{margin-bottom:1.8rem;}
+.vid-section-title{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:.8rem;display:flex;align-items:center;gap:7px;}
+.vid-section-title span{display:inline-block;width:24px;height:2px;border-radius:2px;background:currentColor;opacity:.5;}
+.vid-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;}
+.vid-card{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;transition:all .2s;cursor:pointer;text-decoration:none;display:block;}
+.vid-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.35);}
+.vid-thumb{position:relative;aspect-ratio:16/9;background:var(--bg3);overflow:hidden;}
+.vid-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s;}
+.vid-card:hover .vid-thumb img{transform:scale(1.04);}
+.vid-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+.vid-play-btn{width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.65);border:2px solid rgba(255,255,255,.8);display:flex;align-items:center;justify-content:center;font-size:1.1rem;backdrop-filter:blur(4px);transition:all .2s;}
+.vid-card:hover .vid-play-btn{background:var(--accent);border-color:var(--accent);transform:scale(1.1);}
+.vid-duration{position:absolute;bottom:6px;right:8px;background:rgba(0,0,0,.8);color:#fff;font-size:.62rem;font-weight:700;padding:2px 6px;border-radius:4px;font-family:var(--mono);}
+.vid-body{padding:.9rem;}
+.vid-source{display:inline-flex;align-items:center;gap:5px;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 8px;border-radius:5px;margin-bottom:.5rem;}
+.vid-src-cherno{background:rgba(248,113,113,.12);color:var(--coral);border:1px solid rgba(248,113,113,.2);}
+.vid-src-fcc{background:rgba(52,211,153,.12);color:var(--green);border:1px solid rgba(52,211,153,.2);}
+.vid-src-other{background:rgba(96,165,250,.12);color:var(--blue);border:1px solid rgba(96,165,250,.2);}
+.vid-title{font-size:.88rem;font-weight:700;line-height:1.4;margin-bottom:.3rem;color:var(--text);}
+.vid-desc{font-size:.76rem;color:var(--muted);line-height:1.5;}
+.vid-footer{display:flex;align-items:center;justify-content:space-between;margin-top:.7rem;padding-top:.7rem;border-top:1px solid var(--border);}
+.vid-author{font-size:.7rem;color:var(--muted);display:flex;align-items:center;gap:4px;}
+.vid-watch{font-size:.72rem;font-weight:600;color:var(--accent2);}
+/* ALSO CHECK OUT BOX */
+.also-box{background:rgba(124,106,247,.06);border:1px dashed rgba(124,106,247,.25);border-radius:var(--r);padding:1rem 1.2rem;margin-top:1.5rem;}
+.also-box-title{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--accent2);margin-bottom:.6rem;}
+.also-links{display:flex;flex-wrap:wrap;gap:8px;}
+.also-link{background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:5px 12px;font-size:.78rem;font-weight:600;color:var(--text);text-decoration:none;transition:all .15s;display:inline-flex;align-items:center;gap:5px;}
+.also-link:hover{border-color:var(--accent);color:var(--accent2);}
 </style>
 </head>
 <body>
@@ -247,10 +273,12 @@ a{color:var(--accent2);}a:hover{color:var(--accent);}
       <button class="tab active" id="tb-learn" onclick="switchTab('learn')">📖 Learn</button>
       <button class="tab" id="tb-code" onclick="switchTab('code')">💻 Code</button>
       <button class="tab" id="tb-challenge" onclick="switchTab('challenge')">🏆 Challenge</button>
+      <button class="tab" id="tb-videos" onclick="switchTab('videos')">🎬 Videos</button>
     </div>
     <div id="tab-learn"></div>
     <div id="tab-code" style="display:none"></div>
     <div id="tab-challenge" style="display:none"></div>
+    <div id="tab-videos" style="display:none"></div>
   </div>
 </div>
 
@@ -349,7 +377,7 @@ a{color:var(--accent2);}a:hover{color:var(--accent);}
     </div>
 
     <div id="quiz-container"></div>
-    <div style="display:flex;gap:10px;margin-top:1rem;flex-wrap:wrap;" id="quiz-actions" style="display:none;">
+    <div style="display:none; gap:10px; margin-top:1rem; flex-wrap:wrap;" id="quiz-actions">
       <button class="btn btn-primary btn-sm" onclick="generateFilteredQuiz()">🔀 New Set</button>
       <button class="btn btn-ghost btn-sm" onclick="go('leaderboard')">Leaderboard 🏆</button>
     </div>
@@ -529,7 +557,7 @@ a{color:var(--accent2);}a:hover{color:var(--accent);}
 
 <script>
 // ═══════════════════════ STATE ═══════════════════════
-let xp = 0;
+let xp = parseInt(localStorage.getItem('oop_xp')) || 0;
 let currentModule = null;
 let currentTab = 'learn';
 let prevPage = 'home';
@@ -538,7 +566,7 @@ let quizAnswered = {};
 let quizCorrect = 0;
 let quizRound = 0;
 let currentQuizSet = [];
-let earnedChallenges = new Set();
+let earnedChallenges = new Set(JSON.parse(localStorage.getItem('oop_challenges')||'[]'));
 let pgInited = false;
 
 // ═══════════════════════ MODULES ═══════════════════════
@@ -1044,6 +1072,10 @@ function go(page) {
   window.scrollTo(0,0);
   if(page==='leaderboard') renderLeaderboard();
   if(page==='playground' && !pgInited){ pgInited=true; initPlayground(); }
+  localStorage.setItem('oop_lastPage', page);
+  if (window.location.hash !== '#' + page) {
+    window.location.hash = page;
+  }
 }
 
 function goBack() {
@@ -1088,6 +1120,7 @@ function renderModGrid(id, list) {
 function openModule(id) {
   currentModule = modules.find(m=>m.id===id);
   if(!currentModule) return;
+  localStorage.setItem('oop_lastModule', id);
   document.getElementById('lesson-title').textContent = currentModule.icon+' '+currentModule.title;
   switchTab('learn');
   go('lesson');
@@ -1095,7 +1128,8 @@ function openModule(id) {
 
 function switchTab(tab) {
   currentTab = tab;
-  ['learn','code','challenge'].forEach(t=>{
+  localStorage.setItem('oop_lastTab', tab);
+  ['learn','code','challenge','videos'].forEach(t=>{
     document.getElementById('tab-'+t).style.display = t===tab?'block':'none';
     const b = document.getElementById('tb-'+t);
     if(b) b.classList.toggle('active',t===tab);
@@ -1103,6 +1137,7 @@ function switchTab(tab) {
   if(tab==='learn')     document.getElementById('tab-learn').innerHTML = currentModule.learn;
   if(tab==='code')      renderCodeTab();
   if(tab==='challenge') renderChallengeTab();
+  if(tab==='videos')    renderVideosTab();
 }
 
 function renderCodeTab() {
@@ -1145,6 +1180,7 @@ function checkBlanks(key) {
   fb.classList.add('show');
   if(allOk && !earnedChallenges.has(key)) {
     earnedChallenges.add(key);
+    localStorage.setItem('oop_challenges', JSON.stringify([...earnedChallenges]));
     fb.className='fb show ok';
     fb.textContent='🎉 Perfect! All blanks correct! +'+currentModule.xp+' XP earned!';
     earnXP(currentModule.xp);
@@ -1548,6 +1584,7 @@ function renderLeaderboard() {
 // ═══════════════════════ XP ═══════════════════════
 function earnXP(amount) {
   xp += amount;
+  localStorage.setItem('oop_xp', xp);
   document.getElementById('xp-display').textContent = xp;
   const pill = document.getElementById('xp-pill');
   pill.classList.add('bump');
@@ -1569,13 +1606,268 @@ function shuffle(arr){
   return arr;
 }
 
-// ═══════════════════════ INIT ═══════════════════════
+// ═══════════════════════ VIDEO DATA ═══════════════════════
+// Sources: The Cherno C++ series (PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb),
+//          freeCodeCamp C++ Full Course, CodeBeauty, and more.
+const videoData = {
+  classes: {
+    primary: [
+      {
+        id: '2BP8NhxjrO0',
+        title: 'CLASSES in C++',
+        desc: 'Cherno explains classes vs structs, how to define members and methods, and why classes are the cornerstone of OOP.',
+        duration: '8:00', source: 'cherno', author: 'The Cherno'
+      },
+      {
+        id: 'ABRP_5RYhqU',
+        title: 'Classes and Objects — C++ OOP',
+        desc: 'Clear beginner-friendly walkthrough of creating classes, declaring objects, and accessing members with dot notation.',
+        duration: '14:22', source: 'other', author: 'CodeBeauty'
+      }
+    ],
+    extra: [
+      {
+        id: 'GQp1zzTwrIg',
+        title: 'C++ Full Course for Beginners',
+        desc: 'freeCodeCamp\'s comprehensive C++ course covers classes, objects, and all core OOP concepts in one video.',
+        duration: '4:00:00', source: 'fcc', author: 'freeCodeCamp'
+      }
+    ],
+    also: [
+      { label: 'learncpp.com — Classes', url: 'https://www.learncpp.com/cpp-tutorial/introduction-to-object-oriented-programming/' },
+      { label: 'cppreference — Classes', url: 'https://en.cppreference.com/w/cpp/language/class' },
+    ]
+  },
+  encapsulation: {
+    primary: [
+      {
+        id: 'wN0x9eZLix4',
+        title: 'VISIBILITY in C++ (public, private, protected)',
+        desc: 'Cherno covers access specifiers — what public, private and protected actually mean, and why encapsulation matters.',
+        duration: '8:52', source: 'cherno', author: 'The Cherno'
+      },
+      {
+        id: 'oByhITOGBMs',
+        title: 'Encapsulation — Getters and Setters',
+        desc: 'Step-by-step tutorial on creating private data members and exposing them safely through getter and setter methods.',
+        duration: '11:05', source: 'other', author: 'CodeBeauty'
+      }
+    ],
+    extra: [
+      {
+        id: '3dHoHY68oUc',
+        title: 'C++ Access Specifiers Explained',
+        desc: 'Practical examples showing how private, public, and protected work across classes and derived classes.',
+        duration: '9:30', source: 'other', author: 'Caleb Curry'
+      }
+    ],
+    also: [
+      { label: 'learncpp.com — Access Specifiers', url: 'https://www.learncpp.com/cpp-tutorial/access-specifiers/' },
+      { label: 'W3Schools — C++ Encapsulation', url: 'https://www.w3schools.com/cpp/cpp_encapsulation.asp' },
+    ]
+  },
+  inheritance: {
+    primary: [
+      {
+        id: '81bYbMRSBMI',
+        title: 'INHERITANCE in C++',
+        desc: 'Cherno\'s deep-dive into base and derived classes, IS-A relationships, calling parent constructors, and method overriding.',
+        duration: '14:08', source: 'cherno', author: 'The Cherno'
+      },
+      {
+        id: 'kuNUKHrnKmY',
+        title: 'Inheritance in C++ OOP',
+        desc: 'Beginner-friendly coverage of single, multilevel, and hierarchical inheritance with real code examples.',
+        duration: '17:42', source: 'other', author: 'CodeBeauty'
+      }
+    ],
+    extra: [
+      {
+        id: 'XBBbA8tU2IM',
+        title: 'Multiple Inheritance in C++',
+        desc: 'How to inherit from more than one base class, the diamond problem, and virtual base classes.',
+        duration: '10:15', source: 'other', author: 'The Cherno'
+      }
+    ],
+    also: [
+      { label: 'learncpp.com — Inheritance', url: 'https://www.learncpp.com/cpp-tutorial/basic-inheritance-in-c/' },
+      { label: 'W3Schools — C++ Inheritance', url: 'https://www.w3schools.com/cpp/cpp_inheritance.asp' },
+    ]
+  },
+  polymorphism: {
+    primary: [
+      {
+        id: 'oIV2KchSyGQ',
+        title: 'VIRTUAL FUNCTIONS in C++',
+        desc: 'Cherno explains how virtual functions work internally via the vtable, and why they are essential for polymorphism.',
+        duration: '11:50', source: 'cherno', author: 'The Cherno'
+      },
+      {
+        id: 'KHuHAiXFgEw',
+        title: 'Polymorphism in C++',
+        desc: 'Covers compile-time (overloading) and runtime (virtual) polymorphism with clear Shape/Circle/Rectangle examples.',
+        duration: '19:30', source: 'other', author: 'CodeBeauty'
+      }
+    ],
+    extra: [
+      {
+        id: 'VwhRyQplqrg',
+        title: 'PURE VIRTUAL Functions (Abstract Classes)',
+        desc: 'Cherno covers pure virtual functions, abstract classes, and how to use interfaces in C++ effectively.',
+        duration: '5:33', source: 'cherno', author: 'The Cherno'
+      }
+    ],
+    also: [
+      { label: 'learncpp.com — Virtual Functions', url: 'https://www.learncpp.com/cpp-tutorial/pointers-and-references-to-the-base-class-of-derived-objects/' },
+      { label: 'W3Schools — Polymorphism', url: 'https://www.w3schools.com/cpp/cpp_polymorphism.asp' },
+    ]
+  },
+  abstraction: {
+    primary: [
+      {
+        id: 'VwhRyQplqrg',
+        title: 'PURE VIRTUAL Functions & Interfaces',
+        desc: 'Cherno\'s explanation of abstract classes, interfaces through pure virtual functions, and why this pattern is so powerful.',
+        duration: '5:33', source: 'cherno', author: 'The Cherno'
+      },
+      {
+        id: '5P58SiQEMIs',
+        title: 'Abstraction in C++ OOP',
+        desc: 'A clear explanation of how abstraction hides implementation complexity, with practical real-world examples.',
+        duration: '12:00', source: 'other', author: 'CodeBeauty'
+      }
+    ],
+    extra: [
+      {
+        id: 'GQp1zzTwrIg',
+        title: 'C++ Full Course (Abstract Classes section)',
+        desc: 'The freeCodeCamp course covers abstract classes and interfaces in depth as part of its full OOP section.',
+        duration: '4:00:00', source: 'fcc', author: 'freeCodeCamp'
+      }
+    ],
+    also: [
+      { label: 'learncpp.com — Abstract Classes', url: 'https://www.learncpp.com/cpp-tutorial/pure-virtual-functions-abstract-base-classes-and-interface-classes/' },
+      { label: 'cppreference — Abstract classes', url: 'https://en.cppreference.com/w/cpp/language/abstract_class' },
+    ]
+  },
+  constructors: {
+    primary: [
+      {
+        id: 'FXhALMsHwEY',
+        title: 'CONSTRUCTORS in C++',
+        desc: 'Cherno walks through default constructors, parameterized constructors, initializer lists, and why you should use them.',
+        duration: '9:37', source: 'cherno', author: 'The Cherno'
+      },
+      {
+        id: 'zmb_Jnt8F-k',
+        title: 'DESTRUCTORS in C++',
+        desc: 'Cherno explains what destructors are, when they are called, and how to use them to free heap-allocated memory safely.',
+        duration: '4:24', source: 'cherno', author: 'The Cherno'
+      }
+    ],
+    extra: [
+      {
+        id: '-TkoO8Z07hI',
+        title: 'Constructors and Destructors in C++',
+        desc: 'Covers default, parameterized, and copy constructors with real examples, plus the destructor lifecycle.',
+        duration: '22:16', source: 'other', author: 'CodeBeauty'
+      }
+    ],
+    also: [
+      { label: 'learncpp.com — Constructors', url: 'https://www.learncpp.com/cpp-tutorial/constructors/' },
+      { label: 'learncpp.com — Destructors', url: 'https://www.learncpp.com/cpp-tutorial/destructors/' },
+    ]
+  }
+};
+
+function renderVideosTab() {
+  const id  = currentModule.id;
+  const data = videoData[id];
+  if(!data) {
+    document.getElementById('tab-videos').innerHTML = `<div class="analogy-box"><div class="analogy-lbl">🎬 Coming Soon</div><p>Video links for this module are being curated. Check back soon!</p></div>`;
+    return;
+  }
+
+  const srcLabel = {cherno:'The Cherno', fcc:'freeCodeCamp', other:'YouTube'};
+  const srcClass = {cherno:'vid-src-cherno', fcc:'vid-src-fcc', other:'vid-src-other'};
+  const srcIcon  = {cherno:'🎮', fcc:'🆓', other:'▶️'};
+
+  function vidCard(v) {
+    const thumb = `https://img.youtube.com/vi/${v.id}/mqdefault.jpg`;
+    const url   = `https://www.youtube.com/watch?v=${v.id}`;
+    return `<a class="vid-card" href="${url}" target="_blank" rel="noopener">
+      <div class="vid-thumb">
+        <img src="${thumb}" alt="${v.title}" loading="lazy" onerror="this.style.display='none'">
+        <div class="vid-play"><div class="vid-play-btn">▶</div></div>
+        <div class="vid-duration">${v.duration}</div>
+      </div>
+      <div class="vid-body">
+        <div class="vid-source ${srcClass[v.source]}">${srcIcon[v.source]} ${srcLabel[v.source]}</div>
+        <div class="vid-title">${v.title}</div>
+        <div class="vid-desc">${v.desc}</div>
+        <div class="vid-footer">
+          <div class="vid-author">👤 ${v.author}</div>
+          <div class="vid-watch">Watch ↗</div>
+        </div>
+      </div>
+    </a>`;
+  }
+
+  const alsoHTML = data.also && data.also.length ? `
+    <div class="also-box">
+      <div class="also-box-title">📚 Also Worth Reading</div>
+      <div class="also-links">
+        ${data.also.map(l=>`<a class="also-link" href="${l.url}" target="_blank" rel="noopener">🔗 ${l.label}</a>`).join('')}
+      </div>
+    </div>` : '';
+
+  document.getElementById('tab-videos').innerHTML = `
+    <div class="vid-section">
+      <div class="vid-section-title"><span></span> Core Videos <span></span></div>
+      <div class="vid-grid">${data.primary.map(vidCard).join('')}</div>
+    </div>
+    ${data.extra && data.extra.length ? `
+    <div class="vid-section">
+      <div class="vid-section-title"><span></span> More Resources <span></span></div>
+      <div class="vid-grid">${data.extra.map(vidCard).join('')}</div>
+    </div>` : ''}
+    ${alsoHTML}
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:.8rem 1rem;margin-top:1.2rem;font-size:.78rem;color:var(--muted);display:flex;align-items:center;gap:8px;">
+      🔍 All The Cherno videos are from his free C++ series · 
+      <a href="https://www.youtube.com/playlist?list=PLlrATfBNZ98dudnM48yfGUldqGD0S4FFb" target="_blank" rel="noopener" style="color:var(--accent2);font-weight:600;">View Full Playlist ↗</a>
+    </div>
+  `;
+}
+
 renderRoadmap();
 renderModGrid('home-mods',modules);
 renderModGrid('all-mods',modules);
 syncFilters();      // init filter preview
 renderInheritanceTree();
-go('home');
+
+document.getElementById('xp-display').textContent = xp;
+
+// Restore lesson state if any
+const savedModule = localStorage.getItem('oop_lastModule');
+if (savedModule) {
+  currentModule = modules.find(m => m.id === savedModule);
+  if (currentModule) {
+    document.getElementById('lesson-title').textContent = currentModule.icon + ' ' + currentModule.title;
+    switchTab(localStorage.getItem('oop_lastTab') || 'learn');
+  }
+}
+
+// Check hash first, fallback to locastorage, then 'home'
+const hashPage = window.location.hash ? window.location.hash.substring(1) : null;
+const lastPage = hashPage || localStorage.getItem('oop_lastPage') || 'home';
+
+// Handle browser back/forward buttons
+window.addEventListener('hashchange', () => {
+  const p = window.location.hash.substring(1) || 'home';
+  if (p !== currentPage) go(p);
+});
+
+go(lastPage);
 </script>
 </body>
 </html>
